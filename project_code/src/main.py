@@ -19,28 +19,29 @@ class Statistic:
         self.description = description
         self.min_value = min_value
         self.max_value = max_value
-
+   
     def __str__(self):
-        return f"{self.name}: {self.value}"
+        return f"{self.name}: {self.value} (HP: {self.health}, Stamina: {self.stamina})"
 
     def modify(self, amount: int):
         self.value = max(self.min_value, min(self.max_value, self.value + amount))
 
 
 class Character:
-    def __init__(self, name: str = "Bob"):
+    def __init__(self, name: str = "Leatherface"):
         self.name = name
         self.strength = Statistic("Strength", description="Strength is a measure of physical power.")
-        self.intelligence = Statistic("Intelligence", description="Intelligence is a measure of cognitive ability.")
+        self.health = Statistic("health", description="Health is a measure of lifespan")
+        self.stamina = Statistic("stamina", description=" Stamina is a measure of how much physical activity they can sustain")
         # Add more stats as needed
+    
 
     def __str__(self):
         return f"Character: {self.name}, Strength: {self.strength}, Intelligence: {self.intelligence}"
 
     def get_stats(self):
         return [self.strength, self.intelligence]  # Extend this list if there are more stats
-
-
+        
 class Event:
     def __init__(self, data: dict):
         self.primary_attribute = data['primary_attribute']
@@ -68,6 +69,33 @@ class Event:
             self.status = EventStatus.FAIL
             print(self.fail_message)
 
+class Weapons: 
+    def __init__(self, name: str, damage: int):
+        self.name = name
+        self.damage = damage
+        self.description = f"A {name} that deals {damage} damage." 
+        
+        weapons = [
+            Weapons("Sword", 50),
+            Weapons("Gun", 70),
+            Weapons("Axe", 40),
+            Weapons("Knife", 30),
+            Weapons("Chainsaw", 90)
+        ]
+        
+        if name not in [weapon.name for weapon in weapons]: 
+            raise ValueError(f"{name} is not a valid weapon name.Choose a valid weapon from {weapons}")
+            
+
+    def __str__(self):
+        return f"{self.name} (Damage: {self.damage})" # Weapons are name and damage 
+
+class Location:
+    def __init__(self, events: List[Event]):
+        self.events = events
+
+    def get_event(self) -> Event:
+        return random.choice(self.events)
 
 class Location:
     def __init__(self, events: List[Event]):
