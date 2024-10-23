@@ -62,12 +62,16 @@ class Event:
         if chosen_stat.name == self.primary_attribute:
             self.status = EventStatus.PASS
             print(self.pass_message)
+            character.strength.modify(15)                      # Update strength with successful event  (gains 15 strength)
+            character.health.modify(10)                        # Update health with successful event (gains 10 health)
         elif chosen_stat.name == self.secondary_attribute:
             self.status = EventStatus.PARTIAL_PASS
             print(self.partial_pass_message)
+            character.strength.modify(10)                       # Update strength with partially successful event (gains 10 strength)
         else:
             self.status = EventStatus.FAIL
             print(self.fail_message)
+            character.health.modify(-5)                         # Player loses 5 health from failed event                  
 
 class Weapons: 
     def __init__(self, name: str, damage: int):
