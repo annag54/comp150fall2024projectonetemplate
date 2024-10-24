@@ -1,6 +1,4 @@
 [{
-  "primary_attribute": "Intelligence",
-  "secondary_attribute": "Strength",
   "prompt_text": "You and your friends are on your way to a concert in Dallas but come across a woman covered in blood. Do you stop to help her or keep driving? ",
   "pass": {
     "message": "You stop to help the woman and offer her a ride.  "
@@ -10,8 +8,7 @@
   }
 },
   {
-    "primary_attribute": "Intelligence",
-    "secondary_attribute": "Strength",
+
     "prompt_text": "The lady approaches you and pulls out a gun and aims it towards you. What do you do?",
     "pass": {
       "message": "You successfully persuade the lady to lower the gun. But she shoots herself."
