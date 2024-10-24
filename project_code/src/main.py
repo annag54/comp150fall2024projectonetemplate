@@ -78,10 +78,10 @@ class Character:
         target.health.modify(-damage) 
 
     def __str__(self):
-        return f"Character: {self.name}, Strength: {self.strength}, Health: {self.health}, Agility: {self.agility}"
+        return f"Character: {self.name}, Strength: {self.strength}, Health: {self.health}, Agility: {self.agility}, Intelligence: {self.intelligence}"
 
     def get_stats(self):
-        return [self.strength, self.health, self.agility]  # Extend this list if there are more stats
+        return [self.strength, self.health, self.agility,self.intelligence]  # Extend this list if there are more stats
 
 class Sally(Character):
     def __init__(self):
@@ -90,8 +90,6 @@ class Sally(Character):
         self.health = Statistic("Health", 90, "Sally has low health.") 
         self.agility = Statistic("Agility", 15, "Sally is very fast.")   
         self.intelligence = Statistic("Intelligence", 20 , "Sally is very smart")
-
-
 
     def choose_weapon(self, available_weapons: list):
         return super().choose_weapon(available_weapons)
@@ -102,11 +100,11 @@ class Sally(Character):
             print(f"{self.name} has defeated {target.name}!")
 
     def get_stats(self):
-        return [self.strength, self.health, self.agility]  
+        return [self.strength, self.health, self.agility, self.intelligence]  
 
     def __str__(self):
         return f"""Character: {self.name}, Strength: {self.strength}, 
-        Health: {self.health}, Agility: {self.agility}"""
+        Health: {self.health}, Agility: {self.agility}, Intelligence: {self.intelligence}"""
     
 class Kirk(Character):
         def __init__(self):
@@ -126,11 +124,11 @@ class Kirk(Character):
                 print(f"{self.name} has defeated {target.name}!")
 
         def get_stats(self):
-            return [self.strength, self.health, self.agility]  
+            return [self.strength, self.health, self.agility, self.intelligence]  
 
         def __str__(self):
             return f"""Character: {self.name}, Strength: {self.strength}, 
-            Health: {self.health}, Agility: {self.agility}"""
+            Health: {self.health}, Agility: {self.agility}, Intelligence: {self.intelligence}"""
         
 class Event:
     def __init__(self, data: dict):
@@ -139,12 +137,10 @@ class Event:
         self.prompt_text = data['prompt_text']
         self.pass_message = data['pass']['message']
         self.fail_message = data['fail']['message']
-        self.partial_pass_message = data['partial_pass']['message']
         self.status = EventStatus.UNKNOWN
 
-    def execute(self, party: List[Character], parser):
+    def execute(self, character: Character, parser):
         print(self.prompt_text)
-        character = parser.select_party_member(party)
         chosen_stat = parser.select_stat(character)
         self.resolve_choice(character, chosen_stat)
 
@@ -152,17 +148,14 @@ class Event:
         if chosen_stat.name == self.primary_attribute:
             self.status = EventStatus.PASS
             print(self.pass_message)
-            character.strength.modify(15)                       # Update strength with successful event  (gains 15 strength)
-            character.health.modify(10)                         # Update health with successful event (gains 10 health)
-        elif chosen_stat.name == self.secondary_attribute:
-            self.status = EventStatus.PARTIAL_PASS
-            print(self.partial_pass_message)
-            character.strength.modify(10)                       # Update strength with partially successful event (gains 10 strength)
+            character.strength.modify(2)                       # Update strength with successful event  (gains 15 strength)
+            character.intelligence.modify(3)                         # Update health with successful event (gains 2 intelligence points)
+            character.agility.modify(3)
         else:
             self.status = EventStatus.FAIL
             print(self.fail_message)
-            character.health.modify(-5)                         # Player loses 5 health from failed event                  
-
+            character.health.modify(-10)                         # Player loses 10 health from failed event                  
+                          
 class Location:
     def __init__(self, events: List[Event]):
         self.events = events
@@ -182,9 +175,13 @@ class Game:
     def choose_player(self):
         print("\nChoose your character to play as:")
         for idx, character in enumerate(self.party):
-            print(f"{idx + 1}. {character.name} (Strength: {character.strength.value}, Health: {character.health.value}, Agility: {character.agility.value}, 
-                  Intelligence: {self.intelligence})")
-        
+            print(f"""{idx + 1}. 
+            {character.name} 
+            (Strength: {character.strength.value}, 
+            Health:{character.health.value}, 
+            Agility: {character.agility.value}, 
+            Intelligence: {character.intelligence.value})""")
+
         choice = int(input("Enter the number of the character you want to play: ")) - 1
         if 0 <= choice < len(self.party):
             self.player_character = self.party[choice]
@@ -195,7 +192,8 @@ class Game:
 
     
     def start(self):
-        self.choose_player()
+        if self.player_character is None:
+            self.choose_player()
         while self.continue_playing:
             location = random.choice(self.locations)
             event = location.get_event()
@@ -213,13 +211,6 @@ class Game:
 class UserInputParser:
     def parse(self, prompt: str) -> str:
         return input(prompt)
-
-    def select_party_member(self, party: List[Character]) -> Character:
-        print("Choose a party member:")
-        for idx, member in enumerate(party):
-            print(f"{idx + 1}. {member.name}")
-        choice = int(self.parse("Enter the number of the chosen party member: ")) - 1
-        return party[choice]
 
     def select_stat(self, character: Character) -> Statistic:
         print(f"Choose a stat for {character.name}:")
