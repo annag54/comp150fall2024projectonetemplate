@@ -1,12 +1,12 @@
 [{
   "primary_attribute": "Intelligence",
   "secondary_attribute": "Strength",
-  "prompt_text": "A mysterious door blocks your path, with a riddle inscribed. What will you do?",
+  "prompt_text": "You and your friends are on your way to a concert in Dallas but come across a woman covered in blood. Do you stop to help her or keep driving? ",
   "pass": {
-    "message": "You solved the riddle and pushed the door open. You may proceed."
+    "message": "You stop to help the woman and offer her a ride.  "
   },
   "fail": {
-    "message": "You failed to solve the riddle and push the door open. You must find another way."
+    "message": "You passed the woman and kept driving towards the concert. "
   },
   "partial_pass": {
     "message": "You managed to solve the riddle or push the door, but not both. You made some progress, but the door remains closed."
