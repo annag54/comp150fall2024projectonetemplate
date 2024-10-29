@@ -140,28 +140,15 @@ class Event:
         self.prompt_text = data['prompt_text']
         self.pass_message = data['pass']['message']
         self.fail_message = data['fail']['message']
+        self.choices = data.get('choices', ["Default Option 1", "Default Option 2"])  # Add choices attribute
         self.status = EventStatus.UNKNOWN
 
     def execute(self, character: Character, parser):
         print(self.prompt_text)
         chosen_stat = parser.select_stat(character)
-        self.resolve_choice(character, chosen_stat)
 
     def get_choices(self):
-        return ["Fight", "Flee", "Negotiate"]
-
-    def resolve_choice(self, character: Character, chosen_stat: Statistic):
-        if chosen_stat.name == self.primary_attribute:
-            self.status = EventStatus.PASS
-            print(self.pass_message)
-            character.strength.modify(2)
-            character.intelligence.modify(3)
-            character.agility.modify(3)
-        else:
-            self.status = EventStatus.FAIL
-            print(self.fail_message)
-            character.health.modify(-20)
-
+        return self.choices
 
 class Location:
     def __init__(self, events: List[Event]):
@@ -268,7 +255,7 @@ def start_game():
     kirk = Kirk()
     characters = (sally, kirk)
 
-    events = load_events_from_json('/workspaces/comp150fall2024projectonetemplate/project_code/location_events/location_1.json')  # Ensure this path is correct
+    events = load_events_from_json('project_code/location_events/location_1.json')  # Ensure this path is correct
     locations = [Location(events)]
     game = Game(parser, characters, locations)
     game.start()
