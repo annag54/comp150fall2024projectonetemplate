@@ -1,32 +1,57 @@
-[{
-  "primary_attribute": "Intelligence",
-  "secondary_attribute": "Strength",
-  "prompt_text": "A mysterious door blocks your path, with a riddle inscribed. What will you do?",
-  "pass": {
-    "message": "You solved the riddle and pushed the door open. You may proceed."
-  },
-  "fail": {
-    "message": "You failed to solve the riddle and push the door open. You must find another way."
-  },
-  "partial_pass": {
-    "message": "You managed to solve the riddle or push the door, but not both. You made some progress, but the door remains closed."
-  }
+[{"primary_attribute": "strength",
+    "secondary_attribute": "agility",
+"prompt_text": "You and your friends are on your way to a concert in Dallas but come across a woman covered in blood. Do you stop to help her or keep driving? ",
+"pass": {
+"message": "You stop to help the woman and offer her a ride.  "
 },
-  {
-    "primary_attribute": "Intelligence",
-    "secondary_attribute": "Strength",
-    "prompt_text": "A mysterious door blocks your path, with a riddle inscribed. What will you do?",
-    "pass": {
-      "message": "You solved the riddle and pushed the door open. You may proceed."
-    },
-    "fail": {
-      "message": "You failed to solve the riddle and push the door open. You must find another way."
-    },
-    "partial_pass": {
-      "message": "You managed to solve the riddle or push the door, but not both. You made some progress, but the door remains closed."
-    }
-  }
-
-
+"fail": {
+"message": "Your car breaks down."
+},
+"choices": ["Help", "Drive"]
+},
+{"primary_attribute": "strength",
+    "secondary_attribute": "agility",  
+"prompt_text": "The lady approaches you and pulls out a gun and aims it towards you. What do you do?",
+"pass": {
+  "message": "You successfully persuade the lady to lower the gun. But she shoots herself."
+},
+"fail": {
+  "message": "You get shot. The woman then proceeds to shoot herself.  "
+},
+"choices": ["Fight", "Run", "Negotiate"]
+},
+{"primary_attribute": "strength",
+  "secondary_attribute": "agility",  
+"prompt_text": "You see a house in the distance and knock on the door, you are greeted by a woman she invites you inside but pulls out a knife. What do you do?",
+"pass": {
+"message": "You successfully killed the woman."
+},
+"fail": {
+"message": "You get stabbed. You are wounded. You successfully kill the woman.  "
+},
+"choices": ["Fight", "Negotiate"]
+}
+{"primary_attribute": "strength",
+  "secondary_attribute": "agility",  
+"prompt_text": "You get in a the car to drive away, a lady runs towards your car yelling at you with an axe in her hand. What do you do?"
+"pass": {
+"message": "You are able to drive away before the lady hits your car with her axe."
+}
+"fail": {
+"message": "The lady manages to hit your car various times, breaking your windows in the process"
+},
+"choices":  ["Run", "Fight"]
+}
+{"primary_attribute": "strength",
+  "secondary_attribute": "agility",  
+"prompt_text": "You ",
+"pass": {
+"message": " "
+},
+"fail": {
+"message": " "
+},
+"choices": ["Fight", "Negotiate"]
+}
 
 ]
