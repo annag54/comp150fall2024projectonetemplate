@@ -9,6 +9,7 @@
   },
   "choices": ["Help", "Drive"]
 },
+
   {"primary_attribute": "strength",
         "secondary_attribute": "agility",  
     "prompt_text": "The lady approaches you and pulls out a gun and aims it towards you. What do you do?",
@@ -19,8 +20,19 @@
       "message": "You get shot. The woman then proceeds to shoot herself.  "
     },
     "choices": ["Fight", "Run", "Negotiate"]
-  }
+  },
 
+  {"primary_attribute": "strength",
+  "secondary_attribute": "agility",  
+"prompt_text": "You see a house in the distance and knock on the door, you are greeted by a woman she invites you inside but pulls out a knife. What do you do?",
+"pass": {
+"message": "You successfully killed the woman."
+},
+"fail": {
+"message": "You get stabbed. You are wounded. You successfully kill the woman.  "
+},
+"choices": ["Fight", "Negotiate"]
+}
 
 
 ]

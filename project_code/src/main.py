@@ -183,6 +183,7 @@ class Game:
             except ValueError:
                 print("Please enter a valid number.")
 
+    """This method gives players the ability to make a choice """
     def handle_choice(self, choices: List[str]):
         print("\nWhat would you like to do?")
         for idx, choice in enumerate(choices, start=1):
@@ -264,3 +265,30 @@ def start_game():
 if __name__ == '__main__':
     start_game()
 
+"""
+def execute(self, character: Character, parser: UserInputParser):
+    print(self.prompt_text)
+    chosen_stat = parser.select_stat(character)  # e.g., selected "Strength"
+    if chosen_stat.value > 10:  # Example condition
+        print(self.pass_message)
+        self.status = EventStatus.PASS
+        character.health.modify(5)  # Example stat modification
+    else:
+        print(self.fail_message)
+        self.status = EventStatus.FAIL
+        character.health.modify(-5)
+"""
+
+"""
+def execute(self, character: Character, parser: UserInputParser):
+    print(self.prompt_text)
+    chosen_stat = parser.select_stat(character)  # Selecting a stat
+    choice = parser.parse("Make a choice: ")  # Getting a choice from user
+    print(f"You chose the action: {choice} with {chosen_stat.name}")
+
+    # Update character stats or status based on choice (e.g., fail or pass)
+    if choice.lower() == "attack":
+        character.strength.modify(5)  # Just an example action, adjust as needed
+    elif choice.lower() == "heal":
+        character.health.modify(10)
+"""
