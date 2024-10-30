@@ -154,8 +154,9 @@ class Location:
     def __init__(self, events: List[Event]):
         self.events = events
 
-    def get_event(self) -> Event:
-        return random.choice(self.events)
+    def get_event(self, index) -> Event:
+        chosen_event = self.events.pop(index)
+        return chosen_event
 
 
 class Game:
@@ -201,8 +202,22 @@ class Game:
     def start(self):
         self.choose_player()
         while self.continue_playing:
-            location = random.choice(self.locations)
-            event = location.get_event()
+            # Check if there are any remaining locations
+            if not self.locations:
+                print("No more locations. Game Over.")
+                self.continue_playing = False
+                break
+
+            location = self.locations[0]
+
+            # Check if there are any remaining events in the current location
+            if not location.events:
+                print("No more events in this location. Moving to the next location.")
+                self.locations.pop(0)  # Remove the current location if no events left
+                continue
+
+            # Retrieve and remove the first event from the current location
+            event = location.get_event(0)  # This pops the first event
             if self.player_character:
                 event.execute(self.player_character, self.parser)
                 choice = self.handle_choice(event.get_choices())
@@ -219,6 +234,7 @@ class Game:
         if all_dead:
             print("All characters have died. Game Over!")
         return all_dead
+
 
 
 class UserInputParser:

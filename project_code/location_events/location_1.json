@@ -30,18 +30,18 @@
 "message": "You get stabbed. You are wounded. You successfully kill the woman.  "
 },
 "choices": ["Fight", "Negotiate"]
-}
+},
 {"primary_attribute": "strength",
   "secondary_attribute": "agility",  
-"prompt_text": "You get in a the car to drive away, a lady runs towards your car yelling at you with an axe in her hand. What do you do?"
+"prompt_text": "You get in a the car to drive away, a lady runs towards your car yelling at you with an axe in her hand. What do you do?",
 "pass": {
 "message": "You are able to drive away before the lady hits your car with her axe."
-}
+},
 "fail": {
 "message": "The lady manages to hit your car various times, breaking your windows in the process"
 },
 "choices":  ["Run", "Fight"]
-}
+},
 {"primary_attribute": "strength",
   "secondary_attribute": "agility",  
 "prompt_text": "You ",
