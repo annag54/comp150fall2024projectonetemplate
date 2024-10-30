@@ -138,14 +138,31 @@ class Event:
         self.primary_attribute = data['primary_attribute']
         self.secondary_attribute = data['secondary_attribute']
         self.prompt_text = data['prompt_text']
+        self.choices = data.get('choices', ["Default Option 1", "Default Option 2"])  
         self.pass_message = data['pass']['message']
         self.fail_message = data['fail']['message']
-        self.choices = data.get('choices', ["Default Option 1", "Default Option 2"])  # Add choices attribute
         self.status = EventStatus.UNKNOWN
 
     def execute(self, character: Character, parser):
         print(self.prompt_text)
-        chosen_stat = parser.select_stat(character)
+        print("Available choices:")
+        for idx, choice in enumerate(self.choices, start=1):
+            print(f"{idx}. {choice}")
+
+        choice = parser.parse("Make a choice: ")  # Getting a choice from user
+        chosen_stat = parser.select_stat(character)  # Select stat for character
+        print(f"You chose the action: {choice} with {chosen_stat.name}") # Print out stat and choice made 
+       
+        """Determine pass or fail based on the stat value"""
+        if chosen_stat.value > 18:  
+            print(self.pass_message)
+            self.status = EventStatus.PASS
+            character.strength.modify(5) 
+        else:
+            print(self.fail_message)
+            self.status = EventStatus.FAIL
+            character.health.modify(-15)
+       
 
     def get_choices(self):
         return self.choices
@@ -185,7 +202,6 @@ class Game:
 
     """This method gives players the ability to make a choice """
     def handle_choice(self, choices: List[str]):
-        print("\nWhat would you like to do?")
         for idx, choice in enumerate(choices, start=1):
             print(f"{idx}. {choice}")
         
@@ -206,8 +222,9 @@ class Game:
             event = location.get_event()
             if self.player_character:
                 event.execute(self.player_character, self.parser)
-                choice = self.handle_choice(event.get_choices())
-                print(f"You chose to {choice}.")
+
+                # choice = self.handle_choice(event.get_choices())
+                # print(f"You chose to {choice}.")
                 if self.check_game_over():
                     self.continue_playing = False
             else:
@@ -265,30 +282,4 @@ def start_game():
 if __name__ == '__main__':
     start_game()
 
-"""
-def execute(self, character: Character, parser: UserInputParser):
-    print(self.prompt_text)
-    chosen_stat = parser.select_stat(character)  # e.g., selected "Strength"
-    if chosen_stat.value > 10:  # Example condition
-        print(self.pass_message)
-        self.status = EventStatus.PASS
-        character.health.modify(5)  # Example stat modification
-    else:
-        print(self.fail_message)
-        self.status = EventStatus.FAIL
-        character.health.modify(-5)
-"""
 
-"""
-def execute(self, character: Character, parser: UserInputParser):
-    print(self.prompt_text)
-    chosen_stat = parser.select_stat(character)  # Selecting a stat
-    choice = parser.parse("Make a choice: ")  # Getting a choice from user
-    print(f"You chose the action: {choice} with {chosen_stat.name}")
-
-    # Update character stats or status based on choice (e.g., fail or pass)
-    if choice.lower() == "attack":
-        character.strength.modify(5)  # Just an example action, adjust as needed
-    elif choice.lower() == "heal":
-        character.health.modify(10)
-"""
