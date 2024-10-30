@@ -1,6 +1,6 @@
 import json
-import random
 from typing import List
+import random 
 from enum import Enum
 
 
@@ -8,7 +8,6 @@ class EventStatus(Enum):
     UNKNOWN = "unknown"
     PASS = "pass"
     FAIL = "fail"
-    PARTIAL_PASS = "partial_pass"
 
 
 class Statistic:
@@ -25,7 +24,7 @@ class Statistic:
     def modify(self, amount: int):
         self.value = max(self.min_value, min(self.max_value, self.value + amount))
 
-
+"""Gets choices from json file and implements them"""
 class Choices:
     def __init__(self, choices: str):
         self.choices = choices
@@ -55,9 +54,10 @@ class Character:
         self.strength = Statistic("Strength", description="Strength is a measure of physical power.")
         self.health = Statistic("Health", description="Health is a measure of lifespan")
         self.agility = Statistic("Agility", description="Agility measures a character's reflexes to attacks")
-        self.intelligence = Statistic("Intelligence", description="Intelligence measures a character's chances of persuasion")
+        self.intelligence = Statistic("Intelligence", description= "Intelligence measures a character's chances of persuasion")
         self.weapon = None
 
+    """Lets the user select a weapon for their character"""
     def choose_weapon(self):
         print(f"\n{self.name}, choose your weapon:")
         for i, weapon in enumerate(available_weapons, start=1):
@@ -75,13 +75,6 @@ class Character:
             except ValueError:
                 print("Please enter a valid number.")
 
-    def attack(self, target: "Character"):
-        if self.weapon:
-            damage = random.randint(1, self.weapon.damage) + self.strength.value
-            print(f"{self.name} attacks {target.name} with {self.weapon.name} for {damage} damage!")
-            target.health.modify(-damage)
-        else:
-            print(f"{self.name} has no weapon to attack with.")
 
     def __str__(self):
         return f"Character: {self.name}, Strength: {self.strength}, Health: {self.health}, Agility: {self.agility}, Intelligence: {self.intelligence}"
@@ -89,26 +82,7 @@ class Character:
     def get_stats(self):
         return [self.strength, self.health, self.agility, self.intelligence]
 
-
-class Enemy:
-    def __init__(self, name: str, strength: int, health: int, agility: int):
-        self.name = name
-        self.strength = Statistic("Strength", value=strength)
-        self.health = Statistic("Health", value=health)
-        self.agility = Statistic("Agility", value=agility)
-
-    def attack(self, target: "Character"):
-        damage = random.randint(1, self.strength.value)
-        print(f"{self.name} attacks {target.name} for {damage} damage!")
-        target.health.modify(-damage)
-
-    def __str__(self):
-        return f"Enemy: {self.name}, Strength: {self.strength}, Health: {self.health}, Agility: {self.agility}"
-
-    def get_stats(self):
-        return [self.strength, self.health, self.agility]
-
-
+"""Character classes"""
 class Sally(Character):
     def __init__(self):
         super().__init__("Sally")
@@ -143,21 +117,38 @@ class Event:
         self.fail_message = data['fail']['message']
         self.status = EventStatus.UNKNOWN
 
+    """
+    Lets the user select the stat and the choice they want to make depending on the prompt. 
+    This method also checks whether the int value exists.
+    """
     def execute(self, character: Character, parser):
         print(self.prompt_text)
         print("Available choices:")
         for idx, choice in enumerate(self.choices, start=1):
             print(f"{idx}. {choice}")
-
-        choice = parser.parse("Make a choice: ")  # Getting a choice from user
         chosen_stat = parser.select_stat(character)  # Select stat for character
-        print(f"You chose the action: {choice} with {chosen_stat.name}") # Print out stat and choice made 
+
+        while True:
+            try:
+                choice = int(input("Make a choice: ")) - 1
+                if 0 <= choice < len(self.choices):
+                    self.choices = self.choices[choice]
+                    print(f"You chose the action: {choice} with {chosen_stat.name}") # Print out stat and choice made 
+                    break
+                else:
+                    print("Invalid choice. Please select a valid number.")
+            except ValueError:
+                print("Please enter a valid number.")
+
+        
        
         """Determine pass or fail based on the stat value"""
         if chosen_stat.value > 18:  
             print(self.pass_message)
             self.status = EventStatus.PASS
-            character.strength.modify(5) 
+            character.strength.modify(2)
+            character.intelligence.modify(2) 
+            character.agility.modify(2)
         else:
             print(self.fail_message)
             self.status = EventStatus.FAIL
@@ -167,12 +158,14 @@ class Event:
     def get_choices(self):
         return self.choices
 
+"""Found in the json file"""
 class Location:
     def __init__(self, events: List[Event]):
         self.events = events
 
-    def get_event(self) -> Event:
-        return random.choice(self.events)
+    def get_event(self, index) -> Event:
+        chosen_event = self.events.pop(index)
+        return chosen_event
 
 
 class Game:
@@ -182,7 +175,7 @@ class Game:
         self.locations = locations
         self.continue_playing = True
         self.player_character = None
-
+        print(f"\n'------ Welcome to The Texas Chainsaw Game: Can You Survive? --------' \n")
     def choose_player(self):
         for idx, character in enumerate(self.party):
             print(f"{idx + 1}. {character.name} (Strength: {character.strength.value}, Health: {character.health.value}, Agility: {character.agility.value}, Intelligence: {character.intelligence.value})")
@@ -200,31 +193,25 @@ class Game:
             except ValueError:
                 print("Please enter a valid number.")
 
-    """This method gives players the ability to make a choice """
-    def handle_choice(self, choices: List[str]):
-        for idx, choice in enumerate(choices, start=1):
-            print(f"{idx}. {choice}")
-        
-        while True:
-            try:
-                choice = int(input("Enter the number of your choice: ")) - 1
-                if 0 <= choice < len(choices):
-                    return choices[choice]
-                else:
-                    print("Invalid choice. Please select a valid number.")
-            except ValueError:
-                print("Please enter a valid number.")
-
+       
     def start(self):
         self.choose_player()
         while self.continue_playing:
-            location = random.choice(self.locations)
-            event = location.get_event()
+            if not self.locations:
+                print("No more locations. Game Over.")
+                self.continue_playing = False
+                break
+            location = self.locations[0]                    # start at the first prompt in json file 
+            
+            if not location.events:
+                print("No more events in this location. Moving to the next location.")
+                self.locations.pop(0)                       # Remove the current location if no events left
+                continue
+
+            event = location.get_event(0)
+
             if self.player_character:
                 event.execute(self.player_character, self.parser)
-
-                # choice = self.handle_choice(event.get_choices())
-                # print(f"You chose to {choice}.")
                 if self.check_game_over():
                     self.continue_playing = False
             else:
@@ -273,7 +260,7 @@ def start_game():
     kirk = Kirk()
     characters = (sally, kirk)
 
-    events = load_events_from_json('project_code/location_events/location_1.json')  # Ensure this path is correct
+    events = load_events_from_json('project_code/location_events/location_1.json')  
     locations = [Location(events)]
     game = Game(parser, characters, locations)
     game.start()
