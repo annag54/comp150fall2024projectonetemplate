@@ -4,7 +4,7 @@ import os
 # Add the root directory of the project to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from project_code.src.main import Statistic, Character, Event
+from project_code.src.main import Statistic, Character, Event, Weapon 
 import unittest
 
 class TestStatistic(unittest.TestCase):
@@ -28,10 +28,19 @@ class TestStatistic(unittest.TestCase):
         self.strength.modify(-1000)
         self.assertEqual(self.strength.value, self.strength.min_value)
 
+
+
 class TestCharacter(unittest.TestCase):
 
     def setUp(self):
-        self.character = Character(name="Hero")
+        self.character = Character(name="Sally")
+        
+        self.strength = Statistic("Strength", value = 12)
+        self.agility = Statistic("Agility",value = 10 )
+        self.intelligence = Statistic("Intelligence", value = 20)
+        self.health = Statistic("Health", value = 95)
+
+        self.weapon = Weapon( weapon ="Knife", damage= 10)
 
     def test_character_initialization(self):
         self.assertEqual(self.character.name, "Sally")
@@ -39,6 +48,13 @@ class TestCharacter(unittest.TestCase):
         self.assertEqual(self.character.intelligence.name, "Intelligence")
         self.assertEqual(self.character.agility.name, "Agility")
         self.assertEqual(self.character.health.name, "Health")
+
+    def test_weapon_modify_stat(self):
+        self.assertEqual(self.weapon, "Knife", 10)
+        self.assertEqual(self.strength.modify(self.weapon.damage))
+        self.assertEqual(self.strength.value, 22)
+
+
 
 class TestEvent(unittest.TestCase):
 
