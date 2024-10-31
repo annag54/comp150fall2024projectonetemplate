@@ -60,6 +60,7 @@ class Character:
     """Lets the user select a weapon for their character"""
     def choose_weapon(self):
         print(f"\n{self.name}, choose your weapon:")
+        print(f"\n keep in mind, depending on the weapon you choose your stats will decrease with a random value \n but your strength will increase based on your weapons damage value.")
         for i, weapon in enumerate(available_weapons, start=1):
             print(f"{i}. {weapon.name} (Damage: {weapon.damage})")
 
@@ -69,6 +70,15 @@ class Character:
                 if 0 <= choice < len(available_weapons):
                     self.weapon = available_weapons[choice]
                     self.strength.modify(self.weapon.damage)
+
+                    """
+                    Randomly decreases each stat to an unknown value 
+                    depending on the weapon the player chooses 
+                    """
+                    stats_to_modify = [self.health, self.intelligence, self.agility]
+                    chosen_stat = random.choice(stats_to_modify)
+                    chosen_stat.modify(-self.weapon.damage) 
+
                     print(f"\n{self.name} has chosen the {self.weapon.name}!")
                     break
                 else:
@@ -100,7 +110,7 @@ class Kirk(Character):
     def __init__(self):
         super().__init__("Kirk")
         self.strength = Statistic("Strength", 20, "Kirk is strong")
-        self.health = Statistic("Health", 135, "Kirk has high health")
+        self.health = Statistic("Health", 100, "Kirk has high health")
         self.agility = Statistic("Agility", 10, "Kirk is slow.")
         self.intelligence = Statistic("Intelligence", 10, "Kirk is not very smart")
 
@@ -110,8 +120,6 @@ class Kirk(Character):
 
 class Event:
     def __init__(self, data: dict):
-        # self.primary_attribute = data['primary_attribute']
-        # self.secondary_attribute = data['secondary_attribute']
         self.prompt_text = data['prompt_text']
         self.choices = data.get('choices', ["Default Option 1", "Default Option 2"])  
         self.pass_message = data['pass']['message']
@@ -201,13 +209,13 @@ class Game:
         self.choose_player()
         while self.continue_playing:
             if not self.locations:
-                print("No more locations. Game Over.")
+                print("You survived and escaped. Game won.")
                 self.continue_playing = False
                 break
             location = self.locations[0]                    # start at the first prompt in json file 
             
             if not location.events:
-                print("No more events in this location. Moving to the next location.")
+                #print("No more events in this location. Moving to the next location.")
                 self.locations.pop(0)                       # Remove the current location if no events left
                 continue
 

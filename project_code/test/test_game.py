@@ -44,9 +44,10 @@ class TestEvent(unittest.TestCase):
 
     def setUp(self):
         self.event_data = {
-            "prompt_text": "A mysterious door blocks your path, with a riddle inscribed. What will you do?",
-            "pass": {"message": "You solved the riddle and pushed the door open. You may proceed."},
-            "fail": {"message": "You failed to solve the riddle and push the door open. You must find another way."},
+            "prompt_text": "You come across a house do you go inside?",
+            "pass": {"message": "Go inside. "},
+            "fail": {"message": "The door is locked."},
+            "choices": ["Run","Fight"]
         }
         self.event = Event(self.event_data)
 
@@ -54,6 +55,9 @@ class TestEvent(unittest.TestCase):
         self.assertEqual(self.event.prompt_text, self.event_data["prompt_text"])
         self.assertEqual(self.event.pass_message, self.event_data["pass"]["message"])
         self.assertEqual(self.event.fail_message, self.event_data["fail"]["message"])
+        self.assertEqual(self.event.choices, self.event_data["choices"] ["Default Option 1", "Default Option 2"])
+    
+
 
 if __name__ == '__main__':
     unittest.main()
