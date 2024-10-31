@@ -49,6 +49,7 @@ available_weapons = [
 
 class Character:
     def __init__(self, name: str):
+    def __init__(self, name: str):
         self.name = name
         self.strength = Statistic("Strength", description="Strength is a measure of physical power.")
         self.health = Statistic("Health", description="Health is a measure of lifespan")
@@ -165,9 +166,13 @@ class Location:
     def get_event(self, index) -> Event:
         chosen_event = self.events.pop(index)
         return chosen_event
+    def get_event(self, index) -> Event:
+        chosen_event = self.events.pop(index)
+        return chosen_event
 
 
 class Game:
+    def __init__(self, parser, characters: tuple, locations: List[Location]):
     def __init__(self, parser, characters: tuple, locations: List[Location]):
         self.parser = parser
         self.party = characters
@@ -194,6 +199,7 @@ class Game:
 
        
     def start(self):
+        self.choose_player()
         self.choose_player()
         while self.continue_playing:
             if not self.locations:
@@ -234,6 +240,16 @@ class UserInputParser:
         stats = character.get_stats()
         for idx, stat in enumerate(stats):
             print(f"{idx + 1}. {stat.name} ({stat.value})")
+
+        while True:
+            try:
+                choice = int(self.parse("Enter the number of the stat to use: ")) - 1
+                if 0 <= choice < len(stats):
+                    return stats[choice]
+                else:
+                    print("Invalid choice. Please select a valid number.")
+            except ValueError:
+                print("Please enter a valid number.")
 
         while True:
             try:
