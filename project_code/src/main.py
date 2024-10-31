@@ -108,8 +108,8 @@ class Kirk(Character):
 
 class Event:
     def __init__(self, data: dict):
-        self.primary_attribute = data['primary_attribute']
-        self.secondary_attribute = data['secondary_attribute']
+        # self.primary_attribute = data['primary_attribute']
+        # self.secondary_attribute = data['secondary_attribute']
         self.prompt_text = data['prompt_text']
         self.choices = data.get('choices', ["Default Option 1", "Default Option 2"])  
         self.pass_message = data['pass']['message']
@@ -165,9 +165,7 @@ class Location:
     def get_event(self, index) -> Event:
         chosen_event = self.events.pop(index)
         return chosen_event
-    def get_event(self, index) -> Event:
-        chosen_event = self.events.pop(index)
-        return chosen_event
+ 
 
 
 class Game:
@@ -198,7 +196,6 @@ class Game:
 
        
     def start(self):
-        self.choose_player()
         self.choose_player()
         while self.continue_playing:
             if not self.locations:
@@ -239,16 +236,6 @@ class UserInputParser:
         stats = character.get_stats()
         for idx, stat in enumerate(stats):
             print(f"{idx + 1}. {stat.name} ({stat.value})")
-
-        while True:
-            try:
-                choice = int(self.parse("Enter the number of the stat to use: ")) - 1
-                if 0 <= choice < len(stats):
-                    return stats[choice]
-                else:
-                    print("Invalid choice. Please select a valid number.")
-            except ValueError:
-                print("Please enter a valid number.")
 
         while True:
             try:
