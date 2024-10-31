@@ -49,7 +49,6 @@ available_weapons = [
 
 class Character:
     def __init__(self, name: str):
-    def __init__(self, name: str):
         self.name = name
         self.strength = Statistic("Strength", description="Strength is a measure of physical power.")
         self.health = Statistic("Health", description="Health is a measure of lifespan")
@@ -172,7 +171,7 @@ class Location:
 
 
 class Game:
-    def __init__(self, parser, characters: tuple, locations: List[Location]):
+    
     def __init__(self, parser, characters: tuple, locations: List[Location]):
         self.parser = parser
         self.party = characters
