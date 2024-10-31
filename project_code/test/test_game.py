@@ -34,30 +34,26 @@ class TestCharacter(unittest.TestCase):
         self.character = Character(name="Hero")
 
     def test_character_initialization(self):
-        self.assertEqual(self.character.name, "Hero")
+        self.assertEqual(self.character.name, "Sally")
         self.assertEqual(self.character.strength.name, "Strength")
         self.assertEqual(self.character.intelligence.name, "Intelligence")
+        self.assertEqual(self.character.agility.name, "Agility")
+        self.assertEqual(self.character.health.name, "Health")
 
 class TestEvent(unittest.TestCase):
 
     def setUp(self):
         self.event_data = {
-            "primary_attribute": "Intelligence",
-            "secondary_attribute": "Strength",
             "prompt_text": "A mysterious door blocks your path, with a riddle inscribed. What will you do?",
             "pass": {"message": "You solved the riddle and pushed the door open. You may proceed."},
             "fail": {"message": "You failed to solve the riddle and push the door open. You must find another way."},
-            "partial_pass": {"message": "You managed to solve the riddle or push the door, but not both."}
         }
         self.event = Event(self.event_data)
 
     def test_event_initialization(self):
-        self.assertEqual(self.event.primary_attribute, "Intelligence")
-        self.assertEqual(self.event.secondary_attribute, "Strength")
         self.assertEqual(self.event.prompt_text, self.event_data["prompt_text"])
         self.assertEqual(self.event.pass_message, self.event_data["pass"]["message"])
         self.assertEqual(self.event.fail_message, self.event_data["fail"]["message"])
-        self.assertEqual(self.event.partial_pass_message, self.event_data["partial_pass"]["message"])
 
 if __name__ == '__main__':
     unittest.main()

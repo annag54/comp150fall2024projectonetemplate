@@ -1,6 +1,7 @@
 import json
 from typing import List
 from enum import Enum
+import random
 
 
 class EventStatus(Enum):
@@ -55,7 +56,7 @@ class Character:
         self.agility = Statistic("Agility", description="Agility measures a character's reflexes to attacks")
         self.intelligence = Statistic("Intelligence", description= "Intelligence measures a character's chances of persuasion")
         self.weapon = None
-
+        
     """Lets the user select a weapon for their character"""
     def choose_weapon(self):
         print(f"\n{self.name}, choose your weapon:")
@@ -67,13 +68,14 @@ class Character:
                 choice = int(input("\nEnter the number of the weapon you want: ")) - 1
                 if 0 <= choice < len(available_weapons):
                     self.weapon = available_weapons[choice]
+                    self.strength.modify(self.weapon.damage)
                     print(f"\n{self.name} has chosen the {self.weapon.name}!")
                     break
                 else:
                     print("Invalid choice. Please select a valid number.")
             except ValueError:
                 print("Please enter a valid number.")
-
+        
 
     def __str__(self):
         return f"Character: {self.name}, Strength: {self.strength}, Health: {self.health}, Agility: {self.agility}, Intelligence: {self.intelligence}"
@@ -125,13 +127,13 @@ class Event:
         print("Available choices:")
         for idx, choice in enumerate(self.choices, start=1):
             print(f"{idx}. {choice}")
-        chosen_stat = parser.select_stat(character)  # Select stat for character
 
         while True:
             try:
                 choice = int(input("Make a choice: ")) - 1
                 if 0 <= choice < len(self.choices):
                     self.choices = self.choices[choice]
+                    chosen_stat = parser.select_stat(character)  # Select stat for character
                     print(f"You chose the action: {choice} with {chosen_stat.name}") # Print out stat and choice made 
                     break
                 else:
@@ -142,7 +144,7 @@ class Event:
         
        
         """Determine pass or fail based on the stat value"""
-        if chosen_stat.value > 18:  
+        if random.choice([True, False]) or chosen_stat.value:
             print(self.pass_message)
             self.status = EventStatus.PASS
             character.strength.modify(2)
@@ -151,7 +153,7 @@ class Event:
         else:
             print(self.fail_message)
             self.status = EventStatus.FAIL
-            character.health.modify(-15)
+            character.health.modify(-20)
        
 
     def get_choices(self):
