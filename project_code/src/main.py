@@ -142,7 +142,7 @@ class Event:
                 if 0 <= choice < len(self.choices):
                     self.choices = self.choices[choice]
                     chosen_stat = parser.select_stat(character)  # Select stat for character
-                    print(f"You chose the action: {choice} with {chosen_stat.name}") # Print out stat and choice made 
+                    print(f"You chose the action: {self.choices} with {chosen_stat.name}") # Print out stat and choice made 
                     break
                 else:
                     print("Invalid choice. Please select a valid number.")
@@ -215,7 +215,6 @@ class Game:
             location = self.locations[0]                    # start at the first prompt in json file 
             
             if not location.events:
-                #print("No more events in this location. Moving to the next location.")
                 self.locations.pop(0)                       # Remove the current location if no events left
                 continue
 
@@ -228,7 +227,7 @@ class Game:
             else:
                 print("No character selected. Game Over.")
                 self.continue_playing = False
-        print("Game Over.")
+        print("End of Game.")
 
     def check_game_over(self):
         all_dead = all(character.health.value <= 0 for character in self.party)
