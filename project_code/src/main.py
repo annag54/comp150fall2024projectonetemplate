@@ -152,7 +152,7 @@ class Event:
         
        
         """Determine pass or fail based on the stat value"""
-        if random.choice([True, False]) or chosen_stat.value:
+        if random.choice([True, False]):
             print(self.pass_message)
             self.status = EventStatus.PASS
             character.strength.modify(2)
@@ -186,7 +186,9 @@ class Game:
         self.locations = locations
         self.continue_playing = True
         self.player_character = None
+
         print(f"\n'------ Welcome to The Texas Chainsaw Game: Can You Survive? --------' \n")
+    
     def choose_player(self):
         for idx, character in enumerate(self.party):
             print(f"{idx + 1}. {character.name} (Strength: {character.strength.value}, Health: {character.health.value}, Agility: {character.agility.value}, Intelligence: {character.intelligence.value})")
@@ -208,8 +210,7 @@ class Game:
     def start(self):
         self.choose_player()
         while self.continue_playing:
-            if not self.locations:
-                print("You survived and escaped. Game won.")
+            if self.check_game_over():
                 self.continue_playing = False
                 break
             location = self.locations[0]                    # start at the first prompt in json file 
@@ -222,18 +223,24 @@ class Game:
 
             if self.player_character:
                 event.execute(self.player_character, self.parser)
-                if self.check_game_over():
-                    self.continue_playing = False
             else:
                 print("No character selected. Game Over.")
                 self.continue_playing = False
         print("End of Game.")
 
+    """
+    Checks to see if characters are dead then game over. 
+    If no more locations and if character is alive then game won.
+    """
     def check_game_over(self):
         all_dead = all(character.health.value <= 0 for character in self.party)
         if all_dead:
             print("All characters have died. Game Over!")
-        return all_dead
+            return True
+        elif not self.locations and not all_dead:
+            print("Game Won. You have successfully survived.")
+            return True
+        return False
 
 
 class UserInputParser:

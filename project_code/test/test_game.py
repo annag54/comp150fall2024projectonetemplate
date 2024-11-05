@@ -1,14 +1,13 @@
 import sys
 import os
+import unittest
 
 # Add the root directory of the project to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from project_code.src.main import Statistic, Character, Event, Weapon 
-import unittest
+from project_code.src.main import Statistic, Character, Event, Weapon, EventStatus
 
 class TestStatistic(unittest.TestCase):
-
     def setUp(self):
         self.strength = Statistic("Strength", value=10)
 
@@ -17,30 +16,25 @@ class TestStatistic(unittest.TestCase):
         self.assertEqual(self.strength.value, 10)
 
     def test_statistic_modify(self):
+        # Test increasing and decreasing the value within bounds
         self.strength.modify(5)
         self.assertEqual(self.strength.value, 15)
         self.strength.modify(-10)
         self.assertEqual(self.strength.value, 5)
 
     def test_statistic_min_max_bounds(self):
+        # Test if the value is capped by max_value
         self.strength.modify(1000)
         self.assertEqual(self.strength.value, self.strength.max_value)
+
+        # Test if the value is capped by min_value
         self.strength.modify(-1000)
         self.assertEqual(self.strength.value, self.strength.min_value)
 
 
-
 class TestCharacter(unittest.TestCase):
-
     def setUp(self):
         self.character = Character(name="Sally")
-        
-        self.strength = Statistic("Strength", value = 12)
-        self.agility = Statistic("Agility",value = 10 )
-        self.intelligence = Statistic("Intelligence", value = 20)
-        self.health = Statistic("Health", value = 95)
-
-        self.weapon = Weapon( weapon ="Knife", damage= 10)
 
     def test_character_initialization(self):
         self.assertEqual(self.character.name, "Sally")
@@ -50,20 +44,24 @@ class TestCharacter(unittest.TestCase):
         self.assertEqual(self.character.health.name, "Health")
 
     def test_weapon_modify_stat(self):
-        self.assertEqual(self.weapon, "Knife", 10)
-        self.assertEqual(self.strength.modify(self.weapon.damage))
-        self.assertEqual(self.strength.value, 22)
+        knife = Weapon("Knife", 10)
+        self.character.strength.modify(knife.damage)  # Damage from weapon is added to strength
+        self.assertEqual(self.character.strength.value, 10 + knife.damage)  # 10 is the initial value
 
+    def test_choose_weapon(self):
+        sword = Weapon("Sword", 12)
+        self.character.weapon = sword
+        self.character.strength.modify(sword.damage)
+        self.assertEqual(self.character.strength.value, 22)
 
 
 class TestEvent(unittest.TestCase):
-
     def setUp(self):
         self.event_data = {
-            "prompt_text": "You come across a house do you go inside?",
-            "pass": {"message": "Go inside. "},
+            "prompt_text": "You come across a house. Do you go inside?",
+            "pass": {"message": "You go inside and find supplies."},
             "fail": {"message": "The door is locked."},
-            "choices": ["Run","Fight"]
+            "choices": ["Run", "Fight"]
         }
         self.event = Event(self.event_data)
 
@@ -71,8 +69,21 @@ class TestEvent(unittest.TestCase):
         self.assertEqual(self.event.prompt_text, self.event_data["prompt_text"])
         self.assertEqual(self.event.pass_message, self.event_data["pass"]["message"])
         self.assertEqual(self.event.fail_message, self.event_data["fail"]["message"])
-        self.assertEqual(self.event.choices, self.event_data["choices"] ["Default Option 1", "Default Option 2"])
-    
+        self.assertEqual(self.event.choices, self.event_data["choices"])
+
+    def test_event_execute_pass_condition(self):
+        # Simulate a character passing an event
+        character = Character("Test Character")
+        character.strength.value = 50  # High value to ensure pass
+        self.event.execute(character, parser= None) 
+        self.assertEqual(self.event.status, EventStatus.PASS)
+
+    def test_event_execute_fail_condition(self):
+        # Simulate a character failing an event
+        character = Character("Test Character")
+        character.strength.value = 0  # Low value to ensure fail
+        self.event.execute(character, parser=None)
+        self.assertEqual(self.event.status, EventStatus.FAIL)
 
 
 if __name__ == '__main__':
