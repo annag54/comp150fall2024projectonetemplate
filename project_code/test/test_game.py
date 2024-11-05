@@ -1,8 +1,8 @@
 import sys
 import os
 import unittest
+from unittest.mock import patch
 
-# Add the root directory of the project to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from project_code.src.main import Statistic, Character, Event, Weapon, EventStatus
@@ -70,20 +70,32 @@ class TestEvent(unittest.TestCase):
         self.assertEqual(self.event.pass_message, self.event_data["pass"]["message"])
         self.assertEqual(self.event.fail_message, self.event_data["fail"]["message"])
         self.assertEqual(self.event.choices, self.event_data["choices"])
-
+    
+    @patch('random.choice', return_value=True)  
     def test_event_execute_pass_condition(self):
-        # Simulate a character passing an event
         character = Character("Test Character")
         character.strength.value = 50  # High value to ensure pass
         self.event.execute(character, parser= None) 
         self.assertEqual(self.event.status, EventStatus.PASS)
-
+    
+    @patch('random.choice', return_value=False)  # Assume False means failure
     def test_event_execute_fail_condition(self):
-        # Simulate a character failing an event
         character = Character("Test Character")
         character.strength.value = 0  # Low value to ensure fail
         self.event.execute(character, parser=None)
         self.assertEqual(self.event.status, EventStatus.FAIL)
+
+    def test_player_dead(self):
+        character = Character("Test")
+        character.health.value = 0
+        self.event.execute(character, parser=None)
+        all_dead = all(character.health.value == 0 )
+        self.assertTrue(all_dead, "Player is not dead") # Confirms player has 0 health if they do not then the message will prompt
+
+
+
+
+
 
 
 if __name__ == '__main__':
