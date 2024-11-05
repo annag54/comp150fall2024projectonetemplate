@@ -91,7 +91,7 @@
 "prompt_text": "You have escaped, you run to a neighbors house and ask to call 911. Someone knocks on the doors and asks you to open it. What do you do?",
 "pass": {"message": "You call 911 and ignore the knock"
 },
-"fail": {"message": "You choose to open the door and see who it is"
+"fail": {"message": "You choose to open the door and see who it is. It's your friend they survived."
 },
 "choices": ["Get help", "Open the door"]
 }
