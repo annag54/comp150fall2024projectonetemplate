@@ -1,4 +1,5 @@
-[{"prompt_text": "You and your friends are on your way to a concert in Dallas but come across a woman covered in blood. Do you stop to help her or keep driving? ",
+[{
+"prompt_text": "You and your friends are on your way to a concert in Dallas but come across a woman covered in blood. Do you stop to help her or keep driving? ",
 "pass": {
 "message": "You stop to help the woman and offer her a ride.  "
 },
@@ -7,49 +8,91 @@
 },
 "choices": ["Help", "Drive"]
 },
-
 {
 "prompt_text": "The lady approaches you and pulls out a gun and aims it towards you. What do you do?",
 "pass": {
-  "message": "You successfully persuade the lady to lower the gun. But she shoots herself."
+"message": "You successfully persuade the lady to lower the gun. But she shoots herself."
 },
 "fail": {
-  "message": "You get shot. The woman then proceeds to shoot herself.  "
+"message": "You get shot. The woman then proceeds to shoot herself.  "
 },
 "choices": ["Fight", "Run", "Negotiate"]
 },
-
-{ 
+{
 "prompt_text": "You see a house in the distance and knock on the door, you are greeted by a woman she invites you inside but pulls out a knife. What do you do?",
 "pass": {
 "message": "You successfully killed the woman."
 },
 "fail": {
-"message": "You get stabbed. You are wounded. But you successfully kill the woman.  "
+"message": "You get stabbed. You are wounded. You successfully kill the woman.  "
 },
 "choices": ["Fight", "Negotiate"]
 },
-
-{ 
-"prompt_text": "You find a car in the driveway and climb in it, a lady runs towards the car yelling at you with an axe in her hand. What do you do?",
-"pass": {
-"message": "You manage to get out of the car and are able to hit her with your weapon and damage her."
-},
-"fail": {
-"message": "The lady manages to hit your car various times, breaking your windows and injuring you in the process."
-},
-"choices":  ["Run", "Fight"]
-},
-
 {
-"prompt_text": "You ",
+"prompt_text": "You get in the car to drive away. A lady runs towards your car, yelling at you with an axe in her hand. What do you do?",
 "pass": {
-"message": " "
+"message": "You are able to drive away before the lady hits your car with her axe."
 },
 "fail": {
-"message": " "
+"message": "The lady manages to hit your car multiple times, breaking your windows in the process."
 },
-"choices": ["Fight", "Negotiate"]
+"choices": ["Run", "Fight"]
+},
+{
+"prompt_text": "You are able to get away and start driving. What do you do next?",
+"pass": {
+"message": "Continue to drive as far away as possible."
+},
+"fail": {
+"message": "You decide to go back to see if the woman is still there."
+},
+"choices": ["Continue to drive", "Go back"]
+},
+{
+"prompt_text": "You come across a house and want to ask for help, but no one answers the door. You see an open window that you may be able to get into to save your life. What do you do?",
+"pass": {
+"message": "You are able to get into the house through an open window."
+},
+"fail": {
+"message": "You continue your walk until you find a house that opens the door for you."
+},
+"choices": ["Break in", "Keep searching"]
+},
+{
+"prompt_text": "You come face to face with a lady that claims she will help you, but she has a gun in her hand. What do you do?",
+"pass": {
+"message": "You accept her help, she looks like a nice lady."
+},
+"fail": {
+"message": "You decline her help and tell her you don't need help."
+},
+"choices": ["Accept her help", "Decline her help"]
+},
+{
+"prompt_text": "While walking down the block you hear footsteps behind you. You turn around and see a tall figure with a mask and a knife following you closely. What do you do?",
+"pass": {
+"message": "Run as far away from the person as possible."
+},
+"fail": {"message": "Turn around, ask the person what they want, and fight them."
+},
+"choices": ["Run", "Turn around"]
+},
+{
+"prompt_text": "The masked person attempts to stab you, but you try to dodge them",
+"pass": {
+"message": "you have successfully dodged the person and can escape"
+},
+"fail": {
+"message": "Unfortunately you have been stabbed and are hurt"
+},
+"choices": ["Fight", "Run"]
+},
+{
+"prompt_text": "You have escaped, you run to a neighbors house and ask to call 911. Someone knocks on the doors and asks you to open it. What do you do?",
+"pass": {"message": "You call 911 and ignore the knock"
+},
+"fail": {"message": "You choose to open the door and see who it is"
+},
+"choices": ["Get help", "Open the door"]
 }
-
 ]
